@@ -24,20 +24,20 @@ def h_ascii(key, N):
     Sum of the ASCII character values modulo the hash table size
     """
 
+    try:
+        key_test = len(key)
+    except TypeError:
+        print('Key is not a string')
+        sys.exit(1)
+    try:
+        n_test = int(N)
+    except TypeError:
+        print('N is not an integer')
+        sys.exit(1)
+    # Check that inputs are the correct type.
+
     s = 0
     for i in range(len(key)):
-        try:
-            key_test = str(key)
-        except ValueError:
-            print('Key is not a string')
-            sys.exit(1)
-        try:
-            n_test = int(N)
-        except ValueError:
-            print('N is not an integer')
-            sys.exit(1)
-        # Check that inputs are the correct type.
-
         s += ord(key[i])
 
     return s % N
@@ -45,7 +45,50 @@ def h_ascii(key, N):
 
 
 def h_rolling(key, N):
-    return None
+    """
+    Purpose
+    -------
+    This function returns the rolling polynomial sum of the
+    ASCII values of each element of an input string.
+
+    Inputs
+    ------
+    Key: string
+    String of ASCII characters
+
+    N: integer
+    Size of hash table
+
+    Outputs
+    -------
+    Hash: integer
+    Sum of the ASCII character values modulo the hash table size
+    """
+
+    try:
+        key_test = len(key)
+    except TypeError:
+        print('Key is not a string')
+        sys.exit(1)
+    try:
+        n_test = int(N)
+    except TypeError:
+        print('N is not an integer')
+        sys.exit(1)
+    # Check that inputs are the correct type.
+
+    s = 0
+
+    p = 53
+    m = 2**64
+    # Rolling polynomial values taken from lecture code.
+
+    for i in range(len(key)):
+        s += ord(key[i]) * p**i
+        s = s % m
+    return s % N
+    # Sum the ASCII character values with the rolling polynomial
+    # modulo the hash table size.
 
 
 if __name__ == '__main__':
@@ -64,6 +107,15 @@ if __name__ == '__main__':
     parser.add_argument('--method', type=str, help='Hash method',
                         required=True)
     args = parser.parse_args()
+    # Add & define function arguments.
 
-    print(h_ascii(args.input, args.size))
-    print(h_ascii(args.input, 'size'))
+    if args.method == 'ascii':
+        print(h_ascii(args.input, args.size))
+    if args.method == 'rolling':
+        print(h_rolling(args.input, args.size))
+
+    # print(h_ascii(args.input, args.size))
+    # print(h_ascii(args.input, 'size'))
+    # print(h_rolling(args.input, args.size))
+    # print(h_rolling(10, args.size))
+    # Put these into unit tests.
