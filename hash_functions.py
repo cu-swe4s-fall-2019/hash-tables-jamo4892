@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--input', type=str,
                         help='Input file/string', required=True)
     parser.add_argument('--size', type=int, help='Hash table size',
-                        required=True)
+                        required=False)
     parser.add_argument('--method', type=str, help='Hash method',
                         required=True)
     args = parser.parse_args()
@@ -113,9 +113,3 @@ if __name__ == '__main__':
         print(h_ascii(args.input, args.size))
     if args.method == 'rolling':
         print(h_rolling(args.input, args.size))
-
-    # print(h_ascii(args.input, args.size))
-    # print(h_ascii(args.input, 'size'))
-    # print(h_rolling(args.input, args.size))
-    # print(h_rolling(10, args.size))
-    # Put these into unit tests.
