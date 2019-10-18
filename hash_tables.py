@@ -1,6 +1,21 @@
 import hash_functions
 import sys
+import argparse
+import random
 # Import modules.
+
+
+def reservoir_sampling(new_val, size, V):
+    """
+    I think this function increases
+    the size of a hash table.
+    """
+    if len(V) < size:
+        V.append(new_val)
+    else:
+        j = random.randint(0, len(V))
+        if j < len(V):
+            V[j] = new_val
 
 
 class LinearProbe:
@@ -40,7 +55,6 @@ class LinearProbe:
         hash_slot = self.hash_function(key, self.N)
         # Find the value of the hash key using the
         # selected hash function.
-        print(hash_slot)
 
         for i in range(self.N):
             # Loop over the whole hash table.
@@ -69,10 +83,10 @@ class LinearProbe:
 
         Outputs
         -------
-        None. If an empty hash slot exists, the (key, value) pair is
-        inserted into the hash table.
+        (Key, Value)
+        Key and value associated with that key.
         """
-        hash_slot = self.hash(key, self.N)
+        hash_slot = self.hash_function(key, self.N)
         # Hash value to search for.
 
         for i in range(self.N):
@@ -90,20 +104,113 @@ class LinearProbe:
 
 
 class ChainedHash:
-    def __init__(self, N, hash_fucntion):
+    def __init__(self, N, hash_function):
         self.hash_function = hash_function
-        self.N = N
+        # Set the hash function to use.
 
-    def add(self, key, value):
-        start_hash = self.hash_function(key, self.N)
-        pass
+        self.N = N
+        self.M = 0
+        # Set table size and initial number of keys.
+
+        self.T = [[] for i in range(N)]
+        # Blank [hash_key, hash_value] array.
+
+    def add(self, key):
+        """
+        Purpose
+        -------
+        Adds a hash value to a hash table.
+
+        Inputs
+        ------
+        Key: string
+        Hash key
+
+        Outputs
+        -------
+        T: array
+        Hash table with [key, value] hash values.
+        """
+        hash_slot = self.hash_function(key, self.N)
+        # Find the value of the hash key using the
+        # selected hash function.
+
+        self.T[hash_slot].append((key, hash_slot))
+        self.M += 1
+        return True
+        # Put the hash value in the hash slot.
 
     def search(self, key):
-        start_hash = self.hash_function(key, self.N)
-        pass
+        """
+        Purpose
+        -------
+        Search a hash table for a specific key.
+
+        Inputs
+        ------
+        Key: string
+        Hash key
+
+        Outputs
+        -------
+        (Key, Value)
+        Key and value associated with that key.
+        """
+        hash_slot = self.hash_function(key, self.N)
+        # Find the value of the hash key using the
+        # selected hash function.
+
+        for k, v in self.T[hash_slot]:
+            if key == k:
+                return v
+        return None
+        # Return the hash value for the chosen key.
 
 
 if __name__ == '__main__':
-    ht = LinearProbe(25, hash_functions.h_ascii)
-    ht.add('humunuku')
-    print(ht.T)
+    """
+    This is the main function. It calls either the LinearProbe
+    or ChainedHash classes, and their functions.
+    """
+
+    parser = argparse.ArgumentParser(description='Hash Tables',
+                                     prog='hash_tables')
+    parser.add_argument('--size', type=int,
+                        help='Hash table size', required=True)
+    parser.add_argument('--method', type=str,
+                        help='ascii or rolling', required=True)
+    parser.add_argument('--collision', type=str,
+                        help='linear or chain', required=True)
+    parser.add_argument('--input', type=str, help='File name',
+                        required=True)
+    parser.add_argument('--keys_add', type=int, help='Keys to add',
+                        required=True)
+    parser.add_argument('--keys_search', type=int, help='Keys to search',
+                        required=True)
+    args = parser.parse_args()
+
+    N = args.size
+    hash_algorithm = args.method
+    collision_strategy = args.collision
+    data = args.input
+    keys_add = args.keys_add
+    keys_search = args.keys_search
+    # Add & define class input arguments.
+
+    ht = None
+
+    if hash_algorithm == 'ascii':
+        if collision_strategy == 'linear':
+            ht = LinearProbe(N, hash_functions.h_ascii)
+        if collision_strategy == 'chain':
+            ht = ChainedHash(N, hash_functions.h_ascii)
+        # Run class initializer for linear or chained hashes
+        # with the ascii function.
+
+    if hash_algorithm == 'rolling':
+        if collision_strategy == 'linear':
+            ht = LinearProbe(N, hash_functions.h_ascii)
+        if collision_strategy == 'chain':
+            ht = ChainedHash(N, hash_functions.h_ascii)
+    # Run class initializer for linear or chained hashes
+    # with the rolling function.
