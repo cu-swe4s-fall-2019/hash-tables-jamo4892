@@ -2,6 +2,7 @@ import hash_functions
 import sys
 import argparse
 import random
+import time
 # Import modules.
 
 
@@ -36,7 +37,7 @@ class LinearProbe:
         self.T = [None for i in range(N)]
         # Blank [hash_key, hash_value] array.
 
-    def add(self, key):
+    def add(self, key, value):
         """
         Purpose
         -------
@@ -46,6 +47,9 @@ class LinearProbe:
         ------
         Key: string
         Hash key
+
+        Value: integer
+        Value of a hash key
 
         Outputs
         -------
@@ -63,7 +67,7 @@ class LinearProbe:
             # Test if the hash slot is empty.
 
             if self.T[test_slot] is None:
-                self.T[test_slot] = (key, hash_slot)
+                self.T[test_slot] = (key, value)
                 self.M += 1
                 return True
             # If the hash slot is empty, put the hash value
@@ -115,7 +119,7 @@ class ChainedHash:
         self.T = [[] for i in range(N)]
         # Blank [hash_key, hash_value] array.
 
-    def add(self, key):
+    def add(self, key, value):
         """
         Purpose
         -------
@@ -126,6 +130,9 @@ class ChainedHash:
         Key: string
         Hash key
 
+        Value: integer
+        Value of a hash key
+
         Outputs
         -------
         T: array
@@ -135,7 +142,7 @@ class ChainedHash:
         # Find the value of the hash key using the
         # selected hash function.
 
-        self.T[hash_slot].append((key, hash_slot))
+        self.T[hash_slot].append((key, value))
         self.M += 1
         return True
         # Put the hash value in the hash slot.
@@ -214,3 +221,26 @@ if __name__ == '__main__':
             ht = ChainedHash(N, hash_functions.h_ascii)
     # Run class initializer for linear or chained hashes
     # with the rolling function.
+
+    V = []
+    for l in open(data):
+        reservoir_sampling(l.rstrip(), keys_search, V)
+        # Not sure what this function call actually does.
+
+        t0 = time.time()
+        ht.add(l.rstrip(), l.rstrip())
+        t1 = time.time()
+        print('add', ht.M/ht.N, t1 - t0)
+        # Print the time it takes to add values
+        # to the hash table.
+
+        if ht.M == keys_add:
+            break
+
+    for v in V:
+        t0 = time.time()
+        r = ht.search(v)
+        t1 = time.time()
+        print('search', t1 - t0)
+        # Print the time it takes to search the
+        # hash table.
