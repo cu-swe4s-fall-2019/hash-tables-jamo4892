@@ -17,17 +17,15 @@ run test_rolling_bad_input python hash_functions.py --input 10 --size 100000000 
 assert_exit_code EX_OK
 # Test the h_ascii & h_rolling functions with an incorrect input string.
 
-run test_linear_ascii_tables python hash_tables.py --size 10 --method 'ascii' --input 'hash' --keys_add 0 --keys_search 0 --collision 'linear'
+run test_linear_ascii_tables python hash_tables.py --size 1000 --method 'ascii' --input 'hash' --keys_add 1000 --keys_search 1000 --collision 'linear'
 assert_no_stdout
-run test_linear_rolling_tables python hash_tables.py --size 10 --method 'rolling' --input 'hash' --keys_add 0 --keys_search 0 --collision 'linear'
+run test_linear_rolling_tables python hash_tables.py --size 1000 --method 'rolling' --input 'hash' --keys_add 1000 --keys_search 1000 --collision 'linear'
 assert_no_stdout
-run test_chained_ascii_tables python hash_tables.py --size 10 --method 'ascii' --input 'hash' --keys_add 0 --keys_search 0 --collision 'chained'
+run test_chained_ascii_tables python hash_tables.py --size 1000 --method 'ascii' --input 'hash' --keys_add 1000 --keys_search 1000 --collision 'chained'
 assert_no_stdout
-run test_chained_rolling_tables python hash_tables.py --size 10 --method 'rolling' --input 'hash' --keys_add 0 --keys_search 0 --collision 'chained'
+run test_chained_rolling_tables python hash_tables.py --size 1000 --method 'rolling' --input 'hash' --keys_add 1000 --keys_search 1000 --collision 'chained'
 assert_no_stdout
-# Test the LinearProbe and ChainedHash class initializations in hash_tables.py.
-
-
+# Test the LinearProbe and ChainedHash classes in hash_tables.py.
 
 run test_plot_ascii python hash_functions.py --input 'hash.txt' --size 1000 --method 'ascii' | python scatter.py --out_file ascii_hash.png
 assert_no_stdout
