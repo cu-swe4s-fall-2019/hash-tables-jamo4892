@@ -17,7 +17,6 @@ def reservoir_sampling(new_val, size, V):
         j = random.randint(0, len(V))
         if j < len(V):
             V[j] = new_val
-    print(V)
 
 
 class LinearProbe:
